@@ -25,9 +25,15 @@ if (config.env !== 'test') {
 app.use(helmet());
 
 // parse json request body
+// headers:
+//  content-type: application/json
+// body:
+//  { "key": "value" }
 app.use(express.json());
 
 // parse urlencoded request body
+// content-type: plain/text
+// server.com/path/to/something?hello=world&page=2
 app.use(express.urlencoded({ extended: true }));
 
 // sanitize request data
@@ -35,14 +41,21 @@ app.use(xss());
 app.use(mongoSanitize());
 
 // gzip compression
+// content-encoding: gzip
 app.use(compression());
 
 // enable cors
+// browser protection
 app.use(cors());
 app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
+// JSON Web Token
+// abcdefg.dsaflsdf.dasfsdf
+// 1) { "alg": "sha256" }
+// 2) { "uid": "123456", "email": "email@domain.com", "exp": 12345678 }
+// 3) secret hash
 passport.use('jwt', jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
