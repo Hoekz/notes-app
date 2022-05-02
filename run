@@ -1,0 +1,34 @@
+case $1 in
+  install) 
+    pushd api
+      npm ci
+    popd
+
+    pushd web
+      npm ci
+    popd
+    ;;
+
+  mongo)
+    pushd api
+      docker compose up
+    popd
+    ;;
+
+  api)
+    pushd api
+      npm run dev
+    popd
+    ;;
+
+  web)
+    pushd web
+      npm start
+    popd
+    ;;
+
+  *)
+    echo "Unrecognized command $1. Available commands are mongo, api, and web."
+    ;;
+esac
+
