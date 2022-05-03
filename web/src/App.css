@@ -7,6 +7,14 @@ body {
 }
 
 .data {
-  font-size: 4rem;
+  font-size: 2rem;
   font-weight: bold;
+}
+
+label {
+  display: block;
+  margin: 1rem 0;
+  display: flex;
+  width: 14rem;
+  justify-content: space-between;
 }
