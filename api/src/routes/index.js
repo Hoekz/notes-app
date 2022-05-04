@@ -2,10 +2,23 @@ const { Router } = require('express');
 
 const routes = Router();
 
-const data = {};
+const data = {
+  secret: 'value'
+};
 
 routes.get('/data', (req, res) => {
   setTimeout(() => res.json(data), 2000); // wait 2 seconds then send data
+});
+
+routes.get('/data/:key', (req, res) => {
+  const { key } = req.params;
+  const value = data[key];
+
+  if (key in data) {
+    res.send(`<p>The value of ${key} is ${value}.</p>`);
+  } else {
+    res.status(404).send(`<h1>NOT FOUND</h1>`);
+  }
 });
 
 routes.put('/data', (req, res) => {

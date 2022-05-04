@@ -40,6 +40,13 @@ app.options('*', cors());
 // v1 api routes
 app.use('/', routes);
 
+// render custom HTML
+app.get('/hello/:name', (req, res) => {
+  const { name } = req.params;
+
+  res.send(`<h1>Hello ${name}!</h1><p>It is ${new Date().toLocaleString()}</p>`);
+});
+
 // send back a 404 error for any unknown api request
 app.use((_, res) => {
   return res.status(httpStatus.NOT_FOUND).send('Not found');

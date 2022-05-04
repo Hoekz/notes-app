@@ -1,20 +1,151 @@
-
-body {
+.app {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
-.data {
-  font-size: 2rem;
+.notes-list {
+  width: 15rem;
+  border-right: 1px solid #333;
+}
+
+.notes-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notes-list .list-item {
+  border: none;
+  border-bottom: 1px solid #333;
+  padding: 0.5rem;
+  width: 100%;
+  background: white;
+  text-align: left;
+}
+
+.notes-list .active .list-item {
+  background-color: #ddd;
+}
+
+.notes-list .active .list-item {
+  display: flex;
+  flex-direction: row;
+}
+
+.notes-list .list-item .title {
+  flex: 1;
+}
+
+.notes-list .list-item .save, .notes-list .list-item .delete {
+  width: 2.5rem;
+  height: 100%;
+  border: none;
+  background: none;
+  position: relative;
+}
+
+.notes-list .list-item .save::before, .notes-list .list-item .save::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 0.2rem;
+  height: 1.25rem;
+  background-color: #2a2;
+  transform: rotate(45deg);
+  left: 1.5rem;
+  top: 0rem;
+}
+
+.notes-list .list-item .save::after {
+  top: 0.5rem;
+  left: 0.875rem;
+  height: 0.75rem;
+  transform: rotate(-45deg);
+}
+
+.notes-list .list-item .delete::before, .notes-list .list-item .delete::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 0.2rem;
+  height: 1.25rem;
+  background-color: #a22;
+  transform: rotate(45deg);
+  left: 1.5rem;
+  top: 0rem;
+}
+
+.notes-list .list-item .delete::after {
+  transform: rotate(-45deg);
+}
+
+.new-note, .notes-list .new-note {
+  border: none;
+  padding: 0.5rem 2rem;
+  text-align: center;
+  color: white;
+  background: #2a2;
   font-weight: bold;
 }
 
-label {
+.notes-list .new-note {
+  border-bottom: 1px solid #333;
+}
+
+.notes-list .list-item .title {
   display: block;
-  margin: 1rem 0;
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.notes-list .list-item .updated {
+  display: block;
+  font-size: 0.6rem;
+  font-style: italic;
+  text-align: right;
+  color: #555;
+}
+
+.note-editor {
+  flex: 1;
   display: flex;
-  width: 14rem;
-  justify-content: space-between;
+  flex-direction: column;
+}
+
+.note-editor.empty {
+  align-items: center;
+  justify-content: center;
+}
+
+.note-editor .title {
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  padding-top: 0.6rem;
+}
+
+.note-editor .title:focus {
+  outline: none;
+}
+
+.note-editor .text {
+  width: 100%;
+  resize: none;
+  border: none;
+  font-family: inherit;
+  padding: 0.5rem;
+  flex: 1;
+}
+
+.note-editor .text:focus {
+  outline: none;
 }
