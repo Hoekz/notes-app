@@ -6,6 +6,7 @@ const compression = require('compression');
 const cors = require('cors');
 const httpStatus = require('http-status');
 const routes = require('./routes');
+const listRoutes = require('./list-routes');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.options('*', cors());
 
 // v1 api routes
 app.use('/', routes);
+app.use('/notes', listRoutes);
 
 // render custom HTML
 app.get('/hello/:name', (req, res) => {

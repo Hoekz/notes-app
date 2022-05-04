@@ -30,7 +30,7 @@ export function NotesList({ list, selected, onSelect, onSave, onDelete, setNote 
       <ul>
         {newNote
           ? <ListItem {...selected} selected={true} onDelete={() => setNote(null)} onSave={onSave} />
-          : <li><button className="list-item new-note" onClick={() => setNote({ title: '', text: '', updated: new Date() })}>Create New Note</button></li>
+          : <li><button className="list-item new-note" onClick={() => setNote({ title: '', text: '' })}>Create New Note</button></li>
         }
         {list.map((note) => (
           <ListItem

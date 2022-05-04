@@ -1,6 +1,6 @@
 
 export function NoteEditor({ note, setNote }) {
-  const newNote = () => setNote({ id: null, title: '', text: '', updated: new Date() });
+  const newNote = () => setNote({ id: null, title: '', text: '' });
 
   if (!note) {
     return (
