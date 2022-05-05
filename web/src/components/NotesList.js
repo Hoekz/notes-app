@@ -5,8 +5,8 @@ function ListItem({ id, title, updated, selected, onSelect, onSave, onDelete }) 
       <li className="active">
         <div className={id ? 'list-item' : 'list-item new-item'}>
           <span className="title">{title || 'New Note'}</span>
-          <button className="save" onClick={onSave}></button>
-          <button className="delete" onClick={onDelete}></button>
+          <button className="save" tabIndex="2" onClick={onSave}></button>
+          <button className="delete" tabIndex="2" onClick={onDelete}></button>
         </div>
       </li>
     )

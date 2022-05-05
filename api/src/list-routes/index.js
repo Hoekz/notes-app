@@ -6,9 +6,12 @@ function randomID() {
 
 const routes = Router();
 
-const noteList = [
-  { id: 'abc', title: 'Hello World', text: 'hey', updated: new Date() },
-];
+const noteList = Array(100).fill(null).map((_, i) => ({ // create 100 notes
+  id: randomID(),                                       // random ID
+  title: `Note #${100-i}`,                              // unique title
+  text: `This is note #${100-i}. It is pretty simple.`, // unique text
+  updated: new Date(Date.now() - i * 60 * 60 * 1000),   // updated an hour apart
+}));
 
 routes.get('/', (req, res) => {
   res.json(noteList); // return all the notes
