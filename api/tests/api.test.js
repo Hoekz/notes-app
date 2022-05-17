@@ -3,7 +3,7 @@ const app = require('../src/app');
 
 describe('GET', () => {
   describe('/notes', () => {
-    it('returns all the initial notes', async () => {
+    it('should return all the initial notes', async () => {
       const response = await request(app).get('/notes');
 
       expect(response.statusCode).toEqual(200);
@@ -21,7 +21,7 @@ describe('GET', () => {
 
 describe('DELETE', () => {
   describe('/notes/:noteId', () => {
-    it('returns deletes a single note', async () => {
+    it('should delete a single note', async () => {
       const initialList = await request(app).get('/notes');
       const firstNote = initialList.body[0];
       const initialListLength = initialList.body.length;
@@ -35,7 +35,21 @@ describe('DELETE', () => {
       const finalList = await request(app).get('/notes');
 
       expect(finalList.body.length).toEqual(initialListLength - 1);
-      expect(finalList.body).not.toContain(firstNote);
+      expect(finalList.body).not.toContainEqual(firstNote);
+    });
+
+    it('should not delete unrecognized note', async () => {
+      const initialList = await request(app).get('/notes');
+
+      const response = await request(app).delete(`/notes/not-a-real-note-id`);
+
+      expect(response.statusCode).toEqual(404);
+      expect(response.headers['content-type']).toContain('application/json');
+      expect(response.body).toEqual({ message: 'did not find note' });
+
+      const finalList = await request(app).get('/notes');
+
+      expect(finalList.body).toEqual(initialList.body);
     });
   });
-})
+});
