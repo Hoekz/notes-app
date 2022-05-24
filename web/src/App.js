@@ -1,92 +1,71 @@
-import { useEffect, useState } from 'react';
-import { NotesList } from './components/NotesList';
-import { NoteEditor } from './components/NoteEditor';
-import { randomID } from './utils/random-id';
-import './App.css';
+import { useState } from 'react';
+import NoteApp from './NoteApp';
 
-const apiUrl = 'http://localhost:8080';
+function useAuth() {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')));
 
-async function getNoteList() {
-  const response = await fetch(`${apiUrl}/notes`);
-  const json = await response.json();
+  async function login(email, password) {
+    const res = await fetch('http://localhost:8080/auth/login', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-  return json.map(note => ({
-    ...note,
-    updated: new Date(note.updated),
-  }));
+    const data = await res.json();
+
+    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('token', JSON.stringify(data.token));
+    setUser(data.user);
+    setToken(data.token);
+  }
+
+  async function signup(email, password, name) {
+    const res = await fetch('http://localhost:8080/auth', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, password, name }),
+    });
+
+    const data = await res.json();
+
+    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('token', JSON.stringify(data.token));
+    setUser(data.user);
+    setToken(data.token);
+  }
+
+  return { user, login, signup };
 }
 
-function App() {
-  const [noteList, setNoteList] = useState([]);
-  const [note, setNote] = useState(null);
+export default function App() {
+  const { user, login, signup } = useAuth();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    getNoteList().then(setNoteList);
-  }, []);
-
-  function loadNote(note) {
-    setNote(note);
-    // TODO: load note from server
+  if (user) {
+    return <NoteApp />;
   }
 
-  async function saveNote() {
-    if (note.id) {
-      // send a request to update the note
-      const response = await fetch(`${apiUrl}/notes/${note.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(note),
-      });
-      // get back the updated version
-      const updatedNote = await response.json();
-      // convert the date back from a string
-      updatedNote.updated = new Date(updatedNote.updated);
-      // update the local version of our note list
-      setNoteList(noteList.map(eachNote => eachNote.id === note.id ? updatedNote : eachNote));
+  function onSubmit(e) {
+    e.preventDefault();
+    if (name) {
+      signup(email, password, name);
     } else {
-      // send a request to create the note
-      const response = await fetch(`${apiUrl}/notes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(note),
-      });
-      // get back the updated version
-      const updatedNote = await response.json();
-      // convert the date back from a string
-      updatedNote.updated = new Date(updatedNote.updated);
-      setNoteList([updatedNote, ...noteList]);
-      setNote(updatedNote);
-    }
-
-    // TODO: send note to server
-  }
-
-  async function deleteNote() {
-    if (note) {
-      await fetch(`${apiUrl}/notes/${note.id}`, { method: 'DELETE' });
-
-      setNote(null);
-      setNoteList(noteList.filter(eachNote => eachNote.id !== note.id));
+      login(email, password);
     }
   }
 
   return (
-    <div className="app">
-      <NotesList
-        list={noteList}
-        selected={note}
-        onSelect={loadNote}
-        setNote={setNote}
-        onSave={saveNote}
-        onDelete={deleteNote}
-      />
-      <NoteEditor note={note} setNote={setNote} />
-    </div>
+    <form onSubmit={onSubmit}>
+      <label>Name</label>
+      <input onChange={e => setName(e.target.value)} placeholder='Name' />
+      <label>Email</label>
+      <input onChange={e => setEmail(e.target.value)} placeholder='email' />
+      <label>Password</label>
+      <input onChange={e => setPassword(e.target.value)} placeholder='password' type="password" />
+      <button>Login</button>
+    </form>
   );
 }
-
-export default App;

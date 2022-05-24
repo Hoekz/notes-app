@@ -6,6 +6,8 @@ const compression = require('compression');
 const cors = require('cors');
 const httpStatus = require('http-status');
 const routes = require('./routes');
+const authRoutes = require('./routes/auth');
+const { requireAuth } = require('./auth');
 const listRoutes = require('./list-routes');
 
 const app = express();
@@ -40,6 +42,9 @@ app.options('*', cors());
 
 // v1 api routes
 app.use('/', routes);
+app.use('/auth', authRoutes);
+
+app.use(requireAuth);
 app.use('/notes', listRoutes);
 
 // render custom HTML
